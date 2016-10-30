@@ -3,9 +3,9 @@
 
 int main()
 {
-  int n_points = 1000;
+  int n_points = 10000;
   float x[n_points];
-  x[0] = 0;
+  x[0] = 0.0;
   int i;
   int j;
   int number;
@@ -15,15 +15,23 @@ int main()
   float u_present[n_points];
   for(i=0;i<n_points;i++)
     {
-      x[i] = (float)(i)/(float)(n_points-1);
-      u_initial[i] = exp(-pow((x[i]-(float)0.3),2)/(float)0.01);
+      x[i] = (float)(i)*100/(float)(n_points-1);
+      if(x[i]<=80.0)
+	{
+	  u_initial[i] = 1.25*x[i]/100.0;
+	}
+      else
+	{
+	  u_initial[i] = 5.0-5.0*x[i]/100.0;
+	}
+      //u_initial[i] = exp(-pow((x[i]-(float)0.3),2)/(float)0.01);
     }
   float delta_x = x[1]-x[0];
-  float delta_t = 0.0005;
-  float c = 1.0;
+  float delta_t = 0.005;
+  float c = 2.0;
   float r = c*delta_t/delta_x;
   printf("%f",r);
-  int n_time = 350;
+  int n_time = 40000;
   u_initial[0] = 0.0;
   u_initial[n_points-1] = 0.0;
   u_future[0] = 0.0;
@@ -40,35 +48,40 @@ int main()
       fprintf(f0,"%f %f\n",x[i],u_initial[i]);
     }
   fclose(f0);
-  char text[256] = "cuerda00001.dat";
-  FILE *f = fopen(text,"w");
   for(i=0;i<n_points;i++)
     {
       u_past[i] = u_initial[i];
       u_present[i] = u_future[i];
-      fprintf(f,"%f %f\n",x[i],u_present[i]);
     }
-  fclose(f);
 
   for(i=0;i<n_time;i++)
     {
       for(j=1;j<n_points-1;j++)
 	{
 	  u_future[j] = (2.0*(1.0-r*r))*u_present[j] - u_past[j] + (r*r)*(u_present[j+1] +  u_present[j-1]);
-	  //printf("%f\n",r);
 	}
-      number = i+2;
-      char text[256];
-      sprintf(text,"cuerda%05d.dat",number);      
-      FILE *f = fopen(text,"w");
-      for(j=0;j<n_points;j++)
+      if(i%100==0)
 	{
-	  u_past[j] = u_present[j];
-	  u_present[j] = u_future[j];
-	  fprintf(f,"%f %f\n",x[j],u_present[j]);
+	  char text[256];
+	  number = (i+2)/100;
+	  sprintf(text,"cuerda%05d.dat",number);
+	  FILE *f = fopen(text,"w");
+	  for(j=0;j<n_points;j++)
+	    {
+	      u_past[j] = u_present[j];
+	      u_present[j] = u_future[j];
+	      fprintf(f,"%f %f\n",x[j],u_present[j]);
+	    }
+	  fclose(f);
 	}
-      fclose(f);
-    }
-  
+      else
+	{
+	  for(j=0;j<n_points;j++)
+	    {
+	      u_past[j] = u_present[j];
+	      u_present[j] = u_future[j];
+	    }
+	}
+    }  
   return 0;
 }
