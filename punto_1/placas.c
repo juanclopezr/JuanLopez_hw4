@@ -94,7 +94,16 @@ int main()
 	}
     }
 
-  
+  FILE *f = fopen("placas.dat","w");
+  for(i=0;i<size;i++)
+    {
+      for(j=0;j<size;j++)
+	{
+	  fprintf(f,"%f ",grid[size*i+j]);
+	}
+      fprintf(f,"\n");
+    }
+  fclose(f);
 
   return 0;
 }
