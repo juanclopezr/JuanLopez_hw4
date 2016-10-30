@@ -24,13 +24,11 @@ int main()
 	{
 	  u_initial[i] = 5.0-5.0*x[i]/100.0;
 	}
-      //u_initial[i] = exp(-pow((x[i]-(float)0.3),2)/(float)0.01);
     }
   float delta_x = x[1]-x[0];
   float delta_t = 0.005;
   float c = 2.0;
   float r = c*delta_t/delta_x;
-  printf("%f",r);
   int n_time = 40000;
   u_initial[0] = 0.0;
   u_initial[n_points-1] = 0.0;
