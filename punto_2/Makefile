@@ -8,4 +8,4 @@ cuerda.x : cuerda.c
 	gcc cuerda.c -o cuerda.x -lm
 
 clean :
-	rm cuerda.x cuerda.dat cuerda.gif
+	rm cuerda.x cuerda.gif
