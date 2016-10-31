@@ -13,6 +13,7 @@ int main()
   float h = 0.0002;
   float V_0 = 100;
   float pot = V_0/2.0;
+  float der;
   int N = (int)(2*(powf(L/h,2)));
   float *grid;
   float *future;
@@ -94,7 +95,7 @@ int main()
 	}
     }
 
-  FILE *f = fopen("placas.dat","w");
+  FILE *f = fopen("potential.dat","w");
   for(i=0;i<size;i++)
     {
       for(j=0;j<size;j++)
@@ -104,6 +105,56 @@ int main()
       fprintf(f,"\n");
     }
   fclose(f);
+
+  FILE *fieldx = fopen("fieldx.dat","w");
+  for(i=0;i<size;i++)
+    {
+      for(j=0;j<size;j++)
+	{
+	  if(j==0)
+	    {
+	      der = -(grid[size*i+j+1]-grid[size*i+j])/h;
+	      fprintf(fieldx,"%f ",der);
+	    }
+	  else if(j==size-1)
+	    {
+	      der = -(grid[size*i+j]-grid[size*i+j-1])/h;
+	      fprintf(fieldx,"%f ",der);
+	    }
+	  else
+	    {
+	      der = -(grid[size*i+j+1]-grid[size*i+j-1])/(2.0*h);
+	      fprintf(fieldx,"%f ",der);
+	    }
+	}
+      fprintf(fieldx,"\n");
+    }
+  fclose(fieldx);
+
+  FILE *fieldy = fopen("fieldy.dat","w");
+  for(i=0;i<size;i++)
+    {
+      for(j=0;j<size;j++)
+	{
+	  if(i==0)
+	    {
+	      der = (grid[size*(i+1)+j]-grid[size*i+j])/h;
+	      fprintf(fieldy,"%f ",der);
+	    }
+	  else if(i==size-1)
+	    {
+	      der = (grid[size*i+j]-grid[size*(i-1)+j])/h;
+	      fprintf(fieldy,"%f ",der);
+	    }
+	  else
+	    {
+	      der = (grid[size*(i+1)+j]-grid[size*(i-1)+j])/(2.0*h);
+	      fprintf(fieldy,"%f ",der);
+	    }
+	}
+      fprintf(fieldy,"\n");
+    }
+  fclose(fieldy);
 
   return 0;
 }
