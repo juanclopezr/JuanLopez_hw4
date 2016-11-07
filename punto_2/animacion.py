@@ -14,5 +14,5 @@ for i in range(0,400):
     plt.close()
 
 
-os.system('convert -delay 2 -loop 0 *png cuerda.gif')
+os.system('convert -delay 4 -loop 0 *png cuerda.gif')
 os.system('rm *png *dat')
